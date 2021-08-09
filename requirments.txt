@@ -1,4 +1,7 @@
-pillow
-djangorestframewor
-django
-django-elasticsearch-dsl-drf
+Django==3.2.6
+django-elasticsearch==7.0.2
+django-elasticsearch-dsl==7.2.0
+django-elasticsearch-dsl-drf==0.22.1
+Markdown==3.3.4
+Pillow==8.3.1
+djangorestframework==3.12.4
