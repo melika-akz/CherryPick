@@ -1,0 +1,4 @@
+pillow
+djangorestframewor
+django
+django-elasticsearch-dsl-drf
