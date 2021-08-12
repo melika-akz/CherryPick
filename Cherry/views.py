@@ -82,32 +82,41 @@ def filter_data(find_filter, serializers):
 # this func make json-list for listOfSolutions
 def list_of_query(data):
     list_data = []
-
+    
     for results in data:
-            data = {   
-                'id': results['id'],
-                'place': {
-                        'address': {
-                        'street': results['place']['address']['street'],
-                        'city': results['place']['address']['city'],
-                        'country': results['place']['address']['country'],},
-                        'geolocation':{
-                            'lat': results['place']['geolocation']['lat'],
-                            'lng': results['place']['geolocation']['lng']        
-                             }
-                        },
-                'price': results['price'], 
-                'environment': results['environment'], 
-                'rooms': results['rooms'], 
-                'livingArea': results['livingArea'],
-                'plotArea': results['plotArea'],
-                'kindOfHouse': results['kindOfHouse'],
-                'energyLabel': results['energyLabel'],
-                'constructionYear': results['constructionYear'],
-                'suitableFor': results['suitableFor'],
-                'callType': 'ListOfSolution',
+        for img in results['image']:
+            urls = img['url']
+            
+        data = {   
+            'id': results['id'],
+            'transportation': results['transportation'],
+            'place': {
+                    'address': {
+                    'street': results['place']['address']['street'],
+                    'houseNumber':results['place']['address']['houseNumber'],
+                    'zipcode':results['place']['address']['zipcode'],
+                    'city': results['place']['address']['city'],
+                    'country': results['place']['address']['country'],
+                    },
+
+                    'geolocation':{
+                        'lat': results['place']['geolocation']['lat'],
+                        'lng': results['place']['geolocation']['lng']        
+                         }
+                    },
+            'image': {'url': urls,},
+            'price': results['price'], 
+            'environment': results['environment'], 
+            'rooms': results['rooms'], 
+            'livingArea': results['livingArea'],
+            'plotArea': results['plotArea'],
+            'kindOfHouse': results['kindOfHouse'],
+            'energyLabel': results['energyLabel'],
+            'constructionYear': results['constructionYear'],
+            'suitableFor': results['suitableFor'],
+            'callType': 'ListOfSolution',
                 }
-            list_data.append(data)
+        list_data.append(data)
 
     return list_data
 

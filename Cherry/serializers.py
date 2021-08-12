@@ -58,7 +58,7 @@ class ListOfSolutionsSerializers(serializers.ModelSerializer):
     # callType = serializers.CharField(allow_blank=True)
     id = serializers.CharField()
     place = PlaceSerializers()
-    image = ImageSerialisers(read_only=True)
+    # image = ImageSerialisers(read_only=True)
 
     class Meta:
         model = Home
@@ -76,7 +76,7 @@ class ListOfSolutionsSerializers(serializers.ModelSerializer):
             'constructionYear', 
             'suitableFor',
             'place',
-            'image'
+            # 'image'
             )
 
 
@@ -116,6 +116,8 @@ class DetailedSolutionSerializers(serializers.ModelSerializer):
         results = HomeDocument.search().filter("match", id=validated_data['id'])
        
         for result in results:
+            for img in result['image']:
+                urls = img['url']
             return  { 
                 'id': result['id'],
                 'description': result['description'],
@@ -132,7 +134,7 @@ class DetailedSolutionSerializers(serializers.ModelSerializer):
                             'lng': result['place']['geolocation']['lng']
                             },
                         },
-                'image': {'url': result['image']['url'],}, 
+                'image': {'url': urls,}, 
                 'price': result['price'], 
                 'environment': result['environment'], 
                 'rooms': result['rooms'], 

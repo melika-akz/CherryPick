@@ -4,6 +4,8 @@ from django_elasticsearch_dsl_drf import filter_backends
 from .models import Address, Geolocation, Home, ImageHome, Place
 
 
+
+
 @registry.register_document
 class AddressDocument(Document):
     class Index:
@@ -44,6 +46,30 @@ class GeolocationDocument(Document):
         model = Geolocation
         fields = ['id', 'lat', 'lng']
 
+@registry.register_document
+class PlaceDocument(Document):
+    class Index:
+        name = 'place'   
+        settings = {
+        'number_of_shards': 1,
+        'number_of_replicas': 0
+    }   
+    
+        address: fields.ObjectField(properties={
+                        'street': fields.TextField(),
+                        'houseNumber': fields.TextField(),
+                        'zipcode': fields.TextField(),
+                        'city': fields.TextField(),
+                        'country': fields.TextField()})
+
+        geolocation: fields.ObjectField(properties={
+                        'lat': fields.TextField(),
+                        'lng': fields.TextField(), 
+                    })
+                    
+    class Django:
+        model = Place
+        fields = ['id']
 
 @registry.register_document
 class HomeDocument(Document):
