@@ -9,22 +9,36 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import environ
 
 from pathlib import Path
 import os
+from urllib.parse import quote_plus as urlquote
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+root = environ.Path(__file__) - 2
+print(root)
+
+env = environ.Env(DEBUG=(bool, False),)
+environ.Env.read_env(env_file=root('.environ'))
+
+
+DEBUG = env('DEBUG')
+TEMPLATE_DEBUG = DEBUG
+
+SECRET_KEY = env('SECRET_KEY')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ygec4v%9uzx)il%73gu+c&fg-r9w&wtb#(&y^o6+mt(g@!zy%+'
+# SECRET_KEY = 'ygec4v%9uzx)il%73gu+c&fg-r9w&wtb#(&y^o6+mt(g@!zy%+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
@@ -44,9 +58,6 @@ INSTALLED_APPS = [
     'django_elasticsearch_dsl_drf',
 ]
 
-# ======================================
-
-from urllib.parse import quote_plus as urlquote
 
 elk_base_url = 'elasticsearch://elastic:changeme@localhost:9200'
 elastic_search_url = elk_base_url.format(user_name='elastic',

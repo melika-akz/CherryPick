@@ -11,3 +11,4 @@ html5lib==1.1
 lxml
 xlrd
 selenium==1.26.6
+django-environ==0.4.5
