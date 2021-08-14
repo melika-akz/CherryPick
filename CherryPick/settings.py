@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 root = environ.Path(__file__) - 2
 print(root)
 
-env = environ.Env(DEBUG=(bool, False),)
+env = environ.Env(DEBUG=(bool, True),)
 environ.Env.read_env(env_file=root('.environ'))
 
 
