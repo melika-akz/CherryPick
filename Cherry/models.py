@@ -41,6 +41,6 @@ class Home(models.Model):
     plotArea = models.IntegerField(default=0, blank=True, null=True)
     kindOfHouse = models.CharField(max_length=100, blank=True, null=True)
     energyLabel = models.CharField(max_length=100, blank=True, null=True)
-    constructionYear = models.CharField(max_length=100,default=0, blank=True, null=True)
+    constructionYear = models.IntegerField(default=0, blank=True, null=True)
     suitableFor = models.CharField(max_length=100, blank=True, null=True)
 
