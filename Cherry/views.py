@@ -7,75 +7,8 @@ from .serializers import (
                         )
 from .documents import *
 from .serializers import HomeDocument
-from django.db.models import Q
+from .querys import filter_data
 
-
-# filter multy data
-def filter_data(find_filter, serializers): 
-    search = HomeDocument.search()
-    for obj in find_filter:
-            
-            if obj == 'id' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("match", id= filter)
-            
-            elif obj == 'place.address.street' and find_filter[obj] != "":
-                filter = str(serializers.context.get('result')[str(obj)])
-                search = search.query("match", place__address__street= filter)
-
-            elif obj == 'place.address.city' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("match", place__address__city= filter)
-
-            elif obj == 'place.address.country' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("match", place__address__country= filter)
-            
-            elif obj == 'place.geolocation.lat' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("match", place__geolocation__lat= filter)
-            
-            elif obj == 'place.geolocation.lng' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("match", place__geolocation__lng= filter)
-            
-            elif obj == 'price' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("range", price={'lte': filter})
-            
-            elif obj == 'environment' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("match", environment=filter)
-            
-            elif obj == 'rooms' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("range", rooms={'gte': filter})
-            
-            elif obj == 'livingArea' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("range", livingArea={'gte': filter})
-            
-            elif obj == 'plotArea' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("range", plotArea={'gte': filter})
-            
-            if obj == 'kindOfHouse' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("match", kindOfHouse=filter)
-            
-            elif obj == 'energyLabel' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("match", energyLabel=filter)
-            
-            elif obj == 'constructionYear' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("match", constructionYear=filter)
-            
-            elif obj == 'suitableFor' and find_filter[obj] != "":
-                filter = serializers.context.get('result')[str(obj)]
-                search = search.query("match", suitableFor=filter)
-
-    return search
 
 # this func make json-list for listOfSolutions
 def list_of_query(data):
