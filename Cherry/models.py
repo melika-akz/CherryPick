@@ -3,8 +3,8 @@ from django.db import models
 
 class Geolocation(models.Model):
     id = models.IntegerField(primary_key=True, default=False, null=False)
-    lat = models.FloatField(max_length=50, blank=True, default=None, null=True)
-    lng = models.FloatField(max_length=50, default=None, blank=True, null=True)
+    lat = models.CharField(max_length=50, blank=True, default=None, null=True)
+    lng = models.CharField(max_length=50, default=None, blank=True, null=True)
 
 
 class Address(models.Model):
@@ -33,14 +33,14 @@ class Home(models.Model):
     transportation = models.CharField(max_length=200, blank=True, null=True)
     place = models.ForeignKey(Place, on_delete=models.CASCADE, blank=True, null=True)
     image = models.ManyToManyField(ImageHome,  blank=True)
-    price = models.IntegerField(default=0, blank=True, null=True)
+    price = models.CharField(max_length=100, default=0, blank=True, null=True)
     environment = models.CharField(max_length=100, blank=True, null=True)
-    rooms = models.IntegerField(default=0, blank=True, null=True)
-    rank = models.IntegerField(default=0, blank=True, null=True)
-    livingArea = models.IntegerField(default=0, blank=True, null=True)
-    plotArea = models.IntegerField(default=0, blank=True, null=True)
+    rooms = models.CharField(max_length=100, default=0, blank=True, null=True)
+    rank = models.CharField(max_length=100, default=0, blank=True, null=True)
+    livingArea = models.CharField(max_length=100, default=0, blank=True, null=True)
+    plotArea = models.CharField(max_length=100, default=0, blank=True, null=True)
     kindOfHouse = models.CharField(max_length=100, blank=True, null=True)
     energyLabel = models.CharField(max_length=100, blank=True, null=True)
-    constructionYear = models.IntegerField(default=0, blank=True, null=True)
+    constructionYear = models.CharField(max_length=100, default=0, blank=True, null=True)
     suitableFor = models.CharField(max_length=100, blank=True, null=True)
 
