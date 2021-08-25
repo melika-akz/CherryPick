@@ -35,13 +35,14 @@ class ImageDocument(Document):
 
 @registry.register_document
 class GeolocationDocument(Document):
+
     class Index:
         name = 'geolocation'   
         settings = {
         'number_of_shards': 1,
         'number_of_replicas': 0
     }   
-
+    # radius : fields.TextField()
     class Django:
         model = Geolocation
         fields = ['id', 'lat', 'lng']
@@ -65,6 +66,7 @@ class PlaceDocument(Document):
         geolocation: fields.ObjectField(properties={
                         'lat': fields.TextField(),
                         'lng': fields.TextField(), 
+                        # 'radius' : fields.TextField()
                     })
                     
     class Django:
@@ -90,6 +92,7 @@ class HomeDocument(Document):
                     'geolocation': fields.ObjectField(properties={
                         'lat': fields.TextField(),
                         'lng': fields.TextField(), 
+                        # 'radius' : fields.TextField()
                     }),
                     })
 

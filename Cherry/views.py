@@ -1,5 +1,6 @@
 from rest_framework.generics import CreateAPIView, ListCreateAPIView
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 from .serializers import (
                         NumberOfSolutionsSerializers, 
                         ListOfSolutionsSerializers, 
@@ -54,7 +55,8 @@ def list_of_query(data):
 
 class NumberofSolutionsApiView(CreateAPIView):
     serializer_class = NumberOfSolutionsSerializers
-    
+    # renderer_classes = [JSONRenderer]
+
     def post(self, request, *args, **kwargs):
         serializers = NumberOfSolutionsSerializers(data=request.data , context= {'result':request.data}, many = True)
         find_filter = serializers.context.get('result')

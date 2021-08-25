@@ -7,19 +7,20 @@ from .documents import HomeDocument
 class ImageSerialisers(serializers.ModelSerializer):
     class Meta:
         model = ImageHome
-        fields = '__all__'
+        fields = ('url')
 
 
 class GeolocationSerialisers(serializers.ModelSerializer):
+
     class Meta:
         model = Geolocation
-        fields = '__all__'
+        fields = ('lat', 'lng')
 
 
 class AddressSerialisers(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = '__all__'
+        fields = ('street', 'houseNumber', 'zipcode', 'city', 'country')
 
 
 class PlaceSerializers(serializers.ModelSerializer):
@@ -31,14 +32,13 @@ class PlaceSerializers(serializers.ModelSerializer):
 
 
 class NumberOfSolutionsSerializers(serializers.ModelSerializer):
-    # callType = serializers.CharField(allow_blank=True)
+    radius = serializers.CharField(allow_blank=True)
     id = serializers.CharField()
     place = PlaceSerializers()
     
     class Meta:
         model = Home
         fields = ( 
-            # 'callType', 
             'id',
             'price', 
             'environment', 
@@ -51,19 +51,18 @@ class NumberOfSolutionsSerializers(serializers.ModelSerializer):
             'constructionYear', 
             'suitableFor',
             'place',
+            'raduis',
             )
 
 
 class ListOfSolutionsSerializers(serializers.ModelSerializer):
-    # callType = serializers.CharField(allow_blank=True)
+    radius = serializers.CharField(allow_blank=True)
     id = serializers.CharField()
     place = PlaceSerializers()
-    # image = ImageSerialisers(read_only=True)
-
+    
     class Meta:
         model = Home
         fields = (  
-            # 'callType', 
             'id',
             'price', 
             'environment', 
@@ -76,7 +75,7 @@ class ListOfSolutionsSerializers(serializers.ModelSerializer):
             'constructionYear', 
             'suitableFor',
             'place',
-            # 'image'
+            'radius',
             )
 
 
