@@ -44,7 +44,7 @@ class GeolocationDocument(Document):
 
     class Django:
         model = Geolocation
-        fields = ['id', 'lat', 'lng']
+        fields = ['id', 'lat', 'lon']
 
 @registry.register_document
 class PlaceDocument(Document):
@@ -64,7 +64,7 @@ class PlaceDocument(Document):
 
         geolocation: fields.ObjectField(properties={
                         'lat': fields.TextField(),
-                        'lng': fields.TextField(), 
+                        'lon': fields.TextField(), 
                     })
                     
     class Django:
@@ -89,7 +89,7 @@ class HomeDocument(Document):
                         'country': fields.TextField()}),
                     'geolocation': fields.ObjectField(properties={
                         'lat': fields.TextField(),
-                        'lng': fields.TextField(), 
+                        'lon': fields.TextField(), 
                     }),
                     })
 

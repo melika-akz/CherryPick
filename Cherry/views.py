@@ -32,7 +32,7 @@ def list_of_query(data):
 
                     'geolocation':{
                         'lat': results['place']['geolocation']['lat'],
-                        'lng': results['place']['geolocation']['lng']        
+                        'lon': results['place']['geolocation']['lon']        
                          }
                     },
             'image': {'url': urls,},
