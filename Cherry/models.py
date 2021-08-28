@@ -4,7 +4,7 @@ from django.db import models
 class Geolocation(models.Model):
     id = models.IntegerField(primary_key=True, default=False, null=False)
     lat = models.CharField(max_length=50, blank=True, default=None, null=True)
-    lng = models.CharField(max_length=50, default=None, blank=True, null=True)
+    lon = models.CharField(max_length=50, default=None, blank=True, null=True)
 
 
 class Address(models.Model):

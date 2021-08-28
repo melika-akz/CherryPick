@@ -17,7 +17,7 @@ def make_price(price):
 
 def create_Home(description,price,transportation,kindOfHouse,constructionYear,
                 livingArea,plotArea,rooms,energyLabel, suitableFor, 
-                 houseNumber, street, zipCode, city,url):
+                 houseNumber, street, zipCode, city,url, lon, lat):
     
     x = randint(1111,99999)
 
@@ -31,8 +31,8 @@ def create_Home(description,price,transportation,kindOfHouse,constructionYear,
 
     # add geolocation to db
     geolocation, create = Geolocation.objects.update_or_create(id=x,defaults={
-                        'lat': 0.0,
-                        'lng':0.0,
+                        'lat': lat,
+                        'lon':lon,
                     })
                     
     address = Address.objects.filter(id=x)
@@ -81,10 +81,11 @@ def extract_data_excel():
             data = sh.row(rx)
             home_data = data
             create_Home(
-                    home_data[0].value,home_data[1].value,home_data[2].value,
-                    home_data[3].value,home_data[4].value,home_data[5].value,
-                    home_data[6].value,home_data[7].value,home_data[8].value,
-                    home_data[9].value,home_data[10].value,home_data[11].value,
-                    home_data[12].value,home_data[13].value,home_data[14].value)
+                    home_data[0].value, home_data[1].value, home_data[2].value,
+                    home_data[3].value, home_data[4].value, home_data[5].value,
+                    home_data[6].value, home_data[7].value, home_data[8].value,
+                    home_data[9].value, home_data[10].value, home_data[11].value,
+                    home_data[12].value, home_data[13].value, home_data[14].value,
+                    home_data[15].value, home_data[16].value)
 
 

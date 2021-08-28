@@ -7,19 +7,19 @@ from .documents import HomeDocument
 class ImageSerialisers(serializers.ModelSerializer):
     class Meta:
         model = ImageHome
-        fields = '__all__'
+        fields = ('url',)
 
 
 class GeolocationSerialisers(serializers.ModelSerializer):
     class Meta:
         model = Geolocation
-        fields = '__all__'
+        fields = ('lat', 'lon')
 
 
 class AddressSerialisers(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = '__all__'
+        fields = ('street', 'houseNumber', 'zipcode', 'city', 'country')
 
 
 class PlaceSerializers(serializers.ModelSerializer):
@@ -31,7 +31,7 @@ class PlaceSerializers(serializers.ModelSerializer):
 
 
 class NumberOfSolutionsSerializers(serializers.ModelSerializer):
-    # callType = serializers.CharField(allow_blank=True)
+    radius = serializers.CharField(allow_blank=True)
     id = serializers.CharField()
     place = PlaceSerializers()
     
@@ -51,11 +51,12 @@ class NumberOfSolutionsSerializers(serializers.ModelSerializer):
             'constructionYear', 
             'suitableFor',
             'place',
+            'radius'
             )
 
 
 class ListOfSolutionsSerializers(serializers.ModelSerializer):
-    # callType = serializers.CharField(allow_blank=True)
+    radius = serializers.CharField(allow_blank=True)
     id = serializers.CharField()
     place = PlaceSerializers()
     # image = ImageSerialisers(read_only=True)
@@ -76,13 +77,13 @@ class ListOfSolutionsSerializers(serializers.ModelSerializer):
             'constructionYear', 
             'suitableFor',
             'place',
-            # 'image'
+            'radius'
             )
 
 
 # post id and get detail of home
 class DetailedSolutionSerializers(serializers.ModelSerializer):
-    callType = serializers.CharField(allow_blank=True)
+    # callType = serializers.CharField(allow_blank=True)
     id = serializers.CharField()
     image = ImageSerialisers(read_only=True)
     description = serializers.CharField(allow_blank=True, read_only=True)
@@ -92,8 +93,7 @@ class DetailedSolutionSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Home
-        fields = (
-            'callType', 
+        fields = [
             'id',
             'description',
             'transportation',
@@ -108,16 +108,17 @@ class DetailedSolutionSerializers(serializers.ModelSerializer):
             'energyLabel', 
             'constructionYear', 
             'suitableFor', 
-            'image',
-            )              
+            'image'
+        ]            
         depth = 2
 
     def create(self, validated_data):
         results = HomeDocument.search().filter("match", id=validated_data['id'])
-       
+        url_list = []
         for result in results:
             for img in result['image']:
                 urls = img['url']
+                url_list.append(urls)
             return  { 
                 'id': result['id'],
                 'description': result['description'],
@@ -131,10 +132,10 @@ class DetailedSolutionSerializers(serializers.ModelSerializer):
                         'country': result['place']['address']['country']},
                         'geolocation': {
                             'lat': result['place']['geolocation']['lat'],
-                            'lng': result['place']['geolocation']['lng']
+                            'lon': result['place']['geolocation']['lon']
                             },
                         },
-                'image': {'url': urls,}, 
+                'image': {'url': url_list}, 
                 'price': result['price'], 
                 'environment': result['environment'], 
                 'rooms': result['rooms'], 
