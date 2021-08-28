@@ -16,25 +16,28 @@ def make_must_list_query(must_list):
     return mustList
 
 
-def make_should_list_query(should_list):
+def make_should_list_query(should_list, must_list):
     shouldList = []
     for should in should_list:
-        if len(should_list) == 1 :
+        if len(should_list) == 1 and len(must_list) == 0:
             shouldList.append(Q("match", **{should[0]:should[1]}))
             shouldList.append(~Q("match", **{should[0]:should[1]}))
             
         elif should[0] == 'rooms' or should[0] == 'livingArea' or should[0] == 'plotArea' or should[0] == 'constructionYear' :
             shouldList.append(Q("range", **{should[0]:{'gte': should[1]}}))
-
+            shouldList.append(~Q("match", **{should[0]:should[1]}))
+            
         elif should[0] == 'price':
             shouldList.append(Q("range", price={'lte': should[1]}))
-
+            shouldList.append(~Q("match", **{should[0]:should[1]}))
+            
         else:
             shouldList.append(Q('match', **{should[0]: should[1]}))
-
+            shouldList.append(~Q("match", **{should[0]:should[1]}))
+            
     return shouldList
 
-    
+
 def query_builder(must_list, should_list):
     search = HomeDocument.search()
 
@@ -42,12 +45,11 @@ def query_builder(must_list, should_list):
     mustList = make_must_list_query(must_list)
 
     # make should list query
-    shouldList = make_should_list_query(should_list)
+    shouldList = make_should_list_query(should_list, must_list)
     
     q = Q('bool', must=mustList, should=shouldList)
     
     return search.query(q)
-
 
 # separator data(list) to must list, should list, could list
 def separator_data(query_list):

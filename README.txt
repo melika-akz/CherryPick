@@ -5,3 +5,9 @@ python3 manage.py command -u
 ==================================
 superuser CherryPick Admin
 admin-1qazwer
+==================================
+sudo systemctl daemon-reload
+sudo systemctl restart gunicorn
+=========================
+UtopiaMuskitTeporSkiis
+رمز سرور
