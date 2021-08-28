@@ -2,24 +2,47 @@ from elasticsearch_dsl.query import Q
 from .documents import HomeDocument
 
 
-def query_builder(must_list, should_list):
-    search = HomeDocument.search()
-    mustList,shouldList = [],[]
-
-    # make must list query
+def make_must_list_query(must_list):
+    mustList = []
     for must in must_list:
+        if must[0] == 'rooms' or must[0] == 'livingArea' or must[0] == 'plotArea' or must[0] == 'constructionYear' :
+            mustList.append(Q("range", **{must[0]:{'gte': must[1]}}))
+
+        elif must[0] == 'price':
+            mustList.append(Q("range", price={'lte': must[1]}))
+
         mustList.append(Q('match', **{must[0]: must[1]}))
-    
-    # make should list query
+
+    return mustList
+
+
+def make_should_list_query(should_list):
+    shouldList = []
     for should in should_list:
-        if should[0] == 'rooms' or should[0] == 'livingArea' or should[0] == 'plotArea' or should[0] == 'constructionYear' :
-            mustList.append(Q("range", **{should[0]:{'gte': should[1]}}))
+        if len(should_list) == 1 :
+            shouldList.append(Q("match", **{should[0]:should[1]}))
+            shouldList.append(~Q("match", **{should[0]:should[1]}))
+            
+        elif should[0] == 'rooms' or should[0] == 'livingArea' or should[0] == 'plotArea' or should[0] == 'constructionYear' :
+            shouldList.append(Q("range", **{should[0]:{'gte': should[1]}}))
 
         elif should[0] == 'price':
             shouldList.append(Q("range", price={'lte': should[1]}))
 
         else:
             shouldList.append(Q('match', **{should[0]: should[1]}))
+
+    return shouldList
+
+    
+def query_builder(must_list, should_list):
+    search = HomeDocument.search()
+
+    # make must list query
+    mustList = make_must_list_query(must_list)
+
+    # make should list query
+    shouldList = make_should_list_query(should_list)
     
     q = Q('bool', must=mustList, should=shouldList)
     
