@@ -7,7 +7,7 @@ from .documents import HomeDocument
 class ImageSerialisers(serializers.ModelSerializer):
     class Meta:
         model = ImageHome
-        fields = ('url')
+        fields = ('url',)
 
 
 class GeolocationSerialisers(serializers.ModelSerializer):
@@ -83,7 +83,7 @@ class ListOfSolutionsSerializers(serializers.ModelSerializer):
 
 # post id and get detail of home
 class DetailedSolutionSerializers(serializers.ModelSerializer):
-    callType = serializers.CharField(allow_blank=True)
+    # callType = serializers.CharField(allow_blank=True)
     id = serializers.CharField()
     image = ImageSerialisers(read_only=True)
     description = serializers.CharField(allow_blank=True, read_only=True)
@@ -93,8 +93,7 @@ class DetailedSolutionSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Home
-        fields = (
-            'callType', 
+        fields = [
             'id',
             'description',
             'transportation',
@@ -109,8 +108,8 @@ class DetailedSolutionSerializers(serializers.ModelSerializer):
             'energyLabel', 
             'constructionYear', 
             'suitableFor', 
-            'image',
-            )              
+            'image'
+        ]            
         depth = 2
 
     def create(self, validated_data):
