@@ -114,10 +114,11 @@ class DetailedSolutionSerializers(serializers.ModelSerializer):
 
     def create(self, validated_data):
         results = HomeDocument.search().filter("match", id=validated_data['id'])
-       
+        url_list = []
         for result in results:
             for img in result['image']:
                 urls = img['url']
+                url_list.append(urls)
             return  { 
                 'id': result['id'],
                 'description': result['description'],
@@ -134,7 +135,7 @@ class DetailedSolutionSerializers(serializers.ModelSerializer):
                             'lon': result['place']['geolocation']['lon']
                             },
                         },
-                'image': {'url': urls,}, 
+                'image': {'url': url_list}, 
                 'price': result['price'], 
                 'environment': result['environment'], 
                 'rooms': result['rooms'], 
