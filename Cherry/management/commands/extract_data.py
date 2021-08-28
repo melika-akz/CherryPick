@@ -31,8 +31,8 @@ def create_Home(description,price,transportation,kindOfHouse,constructionYear,
 
     # add geolocation to db
     geolocation, create = Geolocation.objects.update_or_create(id=x,defaults={
-                        'lat': 0.0,
-                        'lng':0.0,
+                        'lat': 4.0,
+                        'lon':52.0,
                     })
                     
     address = Address.objects.filter(id=x)

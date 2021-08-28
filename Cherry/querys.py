@@ -20,7 +20,10 @@ def query_builder(must_list, should_list):
 
         else:
             shouldList.append(Q('match', **{should[0]: should[1]}))
-    
+    # search.filter('geo_distance', Distance='2km', **{"place__geolocation": {
+    #         "lat": 4.7,
+    #         "lon": 53.0
+    #       }})
     q = Q('bool', must=mustList, should=shouldList)
     
     return search.query(q)
