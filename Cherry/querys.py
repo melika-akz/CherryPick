@@ -46,13 +46,9 @@ def query_builder(must_list, should_list):
 
     else:
         q = Q('bool', must=mustList, should=shouldList)
-    # x = search.execute()
-    # h = x.hits[0]
-    # for i in range(len(x)):
-    #     h = x.hits[i]
-    #     print(h.meta.score)
-    
-    return search.query(q)
+        
+    search.query(q)
+    return search
 
 # separator data(list) to must list, should list, could list
 def separator_data(query_list):
