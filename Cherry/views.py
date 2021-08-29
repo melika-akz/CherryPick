@@ -11,13 +11,15 @@ from .querys import filter_data
 
 
 # this func make json-list for listOfSolutions
-def list_of_query(data):
+def list_of_query(result_query):
     list_data = []
-    
-    for results in data:
+    score = result_query.execute()
+    count = 0
+
+    for results in result_query:
         for img in results['image']:
             urls = img['url']
-            
+        
         data = {   
             'id': results['id'],
             'transportation': results['transportation'],
@@ -46,9 +48,12 @@ def list_of_query(data):
             'constructionYear': results['constructionYear'],
             'suitableFor': results['suitableFor'],
             'callType': 'ListOfSolution',
+            'score': score.hits[count].meta.score
                 }
-        list_data.append(data)
 
+        list_data.append(data)
+        count+=1
+        
     return list_data
 
 

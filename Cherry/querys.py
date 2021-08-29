@@ -1,4 +1,5 @@
-from elasticsearch_dsl.query import Q
+from elasticsearch_dsl.function import ScoreFunction
+from elasticsearch_dsl.query import Q , MatchAll, MultiMatch, ScriptScore
 from .documents import HomeDocument
 
 
@@ -19,22 +20,16 @@ def make_must_list_query(must_list):
 def make_should_list_query(should_list, must_list):
     shouldList = []
     for should in should_list:
-        if len(should_list) == 1 and len(must_list) == 0:
-            shouldList.append(Q("match", **{should[0]:should[1]}))
-            shouldList.append(~Q("match", **{should[0]:should[1]}))
-            
-        elif should[0] == 'rooms' or should[0] == 'livingArea' or should[0] == 'plotArea' or should[0] == 'constructionYear' :
+        
+        if should[0] == 'rooms' or should[0] == 'livingArea' or should[0] == 'plotArea' or should[0] == 'constructionYear' :
             shouldList.append(Q("range", **{should[0]:{'gte': should[1]}}))
-            shouldList.append(~Q("match", **{should[0]:should[1]}))
-            
+           
         elif should[0] == 'price':
             shouldList.append(Q("range", price={'lte': should[1]}))
-            shouldList.append(~Q("match", **{should[0]:should[1]}))
-            
+           
         else:
             shouldList.append(Q('match', **{should[0]: should[1]}))
-            shouldList.append(~Q("match", **{should[0]:should[1]}))
-            
+           
     return shouldList
 
 
@@ -46,10 +41,14 @@ def query_builder(must_list, should_list):
 
     # make should list query
     shouldList = make_should_list_query(should_list, must_list)
-    
-    q = Q('bool', must=mustList, should=shouldList)
-    
-    return search.query(q)
+    if len(must_list) == 0:
+        q = Q('bool', must=MatchAll(), should=shouldList)
+
+    else:
+        q = Q('bool', must=mustList, should=shouldList)
+        
+    search.query(q)
+    return search
 
 # separator data(list) to must list, should list, could list
 def separator_data(query_list):
