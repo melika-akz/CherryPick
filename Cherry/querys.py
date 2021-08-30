@@ -46,8 +46,8 @@ def query_builder(must_list, should_list):
 
     else:
         q = Q('bool', must=mustList, should=shouldList)
-        
-    search.query(q)
+    
+    search = search.query(q)
     return search
 
 # separator data(list) to must list, should list, could list

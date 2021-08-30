@@ -1,6 +1,5 @@
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
-from django_elasticsearch_dsl_drf import filter_backends
 from .models import Address, Geolocation, Home, ImageHome, Place
 
 
