@@ -41,6 +41,7 @@ def query_builder(must_list, should_list):
 
     # make should list query
     shouldList = make_should_list_query(should_list, must_list)
+
     if len(must_list) == 0:
         q = Q('bool', must=MatchAll(), should=shouldList)
 
@@ -50,9 +51,11 @@ def query_builder(must_list, should_list):
     search = search.query(q)
     return search
 
+
 # separator data(list) to must list, should list, could list
 def separator_data(query_list):
     should_list, must_list = [],[]
+
     for query in query_list:
         if query[1] == 'M':
             must_list.append([query[0],query[2]])
@@ -68,13 +71,7 @@ def filter_data(find_filter, serializers):
     search = HomeDocument.search()
     query_list = []
     for obj in find_filter:
-        if obj == 'id' and find_filter[obj] != "":
-            filter = serializers.context.get('result')[str(obj)]
-            search = search.query("match", id= filter)
-
-            return search
-
-        elif find_filter[obj] != "":
+        if find_filter[obj] != "":
             value = str(serializers.context.get('result')[str(obj)])
                 
             if value.find(':'):

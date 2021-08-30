@@ -10,10 +10,17 @@ from .serializers import HomeDocument
 from .querys import filter_data
 
 
+def score_building(result_query, count):
+    score_data = result_query.execute()
+    max_score = result_query.execute().hits.max_score
+    score = score_data.hits[count].meta.score
+    new_score = (score * 100)/max_score
+    
+    return int(new_score)
+
 # this func make json-list for listOfSolutions
 def list_of_query(result_query):
     list_data = []
-    score = result_query.execute()
     count = 0
 
     for results in result_query:
@@ -48,7 +55,7 @@ def list_of_query(result_query):
             'constructionYear': results['constructionYear'],
             'suitableFor': results['suitableFor'],
             'callType': 'ListOfSolution',
-            'score': score.hits[count].meta.score
+            'score': score_building(result_query, count)
                 }
 
         list_data.append(data)
