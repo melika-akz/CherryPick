@@ -1,6 +1,6 @@
 from django.db import models
 
-
+ 
 class Geolocation(models.Model):
     id = models.IntegerField(primary_key=True, default=False, null=False)
     lat = models.CharField(max_length=50, blank=True, default=None, null=True)

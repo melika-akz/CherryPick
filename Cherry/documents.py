@@ -122,6 +122,4 @@ class HomeDocument(Document):
                 return related_instance.lat , related_instance.lng , related_instance.pk
             elif isinstance(related_instance, AddressDocument):
                 return related_instance.street, related_instance.houseNumber, related_instance.zipcode, related_instance.city, related_instance.country, related_instance.pk
-
-
     

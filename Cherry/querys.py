@@ -79,3 +79,24 @@ def filter_data(find_filter, serializers):
                     
     search = separator_data(query_list)
     return search
+
+
+# ======================================
+# from scipy.spatial import cKDTree
+# from scipy import inf
+
+# max_distance = 0.0001 # Assuming lats and longs are in decimal degrees, this corresponds to 11.1 meters
+# # points = [(lat1, long1), (lat2, long2) ]
+# points = [()]
+# tree = cKDTree(points)
+
+# point_neighbors_list = [] # Put the neighbors of each point here
+
+# for point in points:
+#     distances, indices = tree.query(point, len(points), p=2, distance_upper_bound=max_distance)
+#     point_neighbors = []
+#     for index, distance in zip(indices, distances):
+#         if distance == inf:
+#             break
+#         point_neighbors.append(points[index])
+#     point_neighbors_list.append(point_neighbors)
