@@ -118,10 +118,23 @@ REST_FRAMEWORK = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'cherry',
+        'USER': 'cherry_rle',
+        'PASSWORD': '1qazqwer',
+        'HOST': 'localhost',
+        'PORT': '5432'
+        
     }
 }
+
+
+# DATABASES = {
+#        'default': {
+#            'ENGINE': 'djongo',
+#            'NAME': 'CherryDB',
+#        }
+#    }
 
 
 

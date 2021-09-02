@@ -1,17 +1,20 @@
-from elasticsearch_dsl.function import ScoreFunction
-from elasticsearch_dsl.query import Q , MatchAll, MultiMatch, ScriptScore
+from elasticsearch_dsl.query import Q , MatchAll
 from .documents import HomeDocument
+from .geolocation_alg import calcute_distance
 
-
+lat_lon = []
 def make_must_list_query(must_list):
     mustList = []
+    print(must_list)
     for must in must_list:
+        
         if must[0] == 'rooms' or must[0] == 'livingArea' or must[0] == 'plotArea' or must[0] == 'constructionYear' :
             mustList.append(Q("range", **{must[0]:{'gte': must[1]}}))
 
         elif must[0] == 'price':
             mustList.append(Q("range", price={'lte': must[1]}))
 
+        
         mustList.append(Q('match', **{must[0]: must[1]}))
 
     return mustList
@@ -21,12 +24,25 @@ def make_should_list_query(should_list, must_list):
     shouldList = []
     for should in should_list:
         
+        
         if should[0] == 'rooms' or should[0] == 'livingArea' or should[0] == 'plotArea' or should[0] == 'constructionYear' :
             shouldList.append(Q("range", **{should[0]:{'gte': should[1]}}))
            
         elif should[0] == 'price':
             shouldList.append(Q("range", price={'lte': should[1]}))
-           
+        
+        # elif should[0] == 'place.geolocation.lat' or should[0] =='place.geolocation.lon':
+        #     lat_lon.append(float(should[1]))
+        #     print('inja')
+        #     shouldList.append(Q('match', **{should[0]: should[1]}))
+
+        # elif should[0] == 'radius':
+        #     print(lat_lon)
+        #     geo = calcute_distance(float(lat_lon[0]), float(lat_lon[1]), int(should[1]))
+        #     print(geo)
+        #     shouldList.append(Q('range', **{'place.geolocation.lat': {'gte': geo[0]}}))
+        #     shouldList.append(Q('range', **{'place.geolocation.lat': {'gte': geo[1]}}))
+
         else:
             shouldList.append(Q('match', **{should[0]: should[1]}))
            
@@ -57,6 +73,7 @@ def separator_data(query_list):
     should_list, must_list = [],[]
 
     for query in query_list:
+        
         if query[1] == 'M':
             must_list.append([query[0],query[2]])
 
@@ -81,22 +98,3 @@ def filter_data(find_filter, serializers):
     return search
 
 
-# ======================================
-# from scipy.spatial import cKDTree
-# from scipy import inf
-
-# max_distance = 0.0001 # Assuming lats and longs are in decimal degrees, this corresponds to 11.1 meters
-# # points = [(lat1, long1), (lat2, long2) ]
-# points = [()]
-# tree = cKDTree(points)
-
-# point_neighbors_list = [] # Put the neighbors of each point here
-
-# for point in points:
-#     distances, indices = tree.query(point, len(points), p=2, distance_upper_bound=max_distance)
-#     point_neighbors = []
-#     for index, distance in zip(indices, distances):
-#         if distance == inf:
-#             break
-#         point_neighbors.append(points[index])
-#     point_neighbors_list.append(point_neighbors)

@@ -86,10 +86,13 @@ class HomeDocument(Document):
                         'zipcode': fields.TextField(),
                         'city': fields.TextField(),
                         'country': fields.TextField()}),
+                    
                     'geolocation': fields.ObjectField(properties={
                         'lat': fields.TextField(),
                         'lon': fields.TextField(), 
+                        'location' : fields.GeoPointField()
                     }),
+                    
                     })
 
     image = fields.ObjectField(properties={

@@ -1,8 +1,10 @@
 from django.db import models
+from django.contrib.gis.db import models
 
  
 class Geolocation(models.Model):
     id = models.IntegerField(primary_key=True, default=False, null=False)
+    location = models.PointField()
     lat = models.CharField(max_length=50, blank=True, default=None, null=True)
     lon = models.CharField(max_length=50, default=None, blank=True, null=True)
 
@@ -20,7 +22,7 @@ class Place(models.Model):
     id = models.IntegerField(primary_key=True, default=False, null=False)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True)
     geolocation = models.ForeignKey(Geolocation, on_delete=models.CASCADE, blank=True, null=True)
-
+    
 
 class ImageHome(models.Model):
     id = models.IntegerField(primary_key=True, default=False, null=False)
