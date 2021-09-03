@@ -31,7 +31,7 @@ class PlaceSerializers(serializers.ModelSerializer):
 
 
 class NumberOfSolutionsSerializers(serializers.ModelSerializer):
-    radius = serializers.CharField(allow_blank=True)
+    # radius = serializers.CharField(allow_blank=True)
     id = serializers.CharField()
     place = PlaceSerializers()
     
@@ -51,12 +51,12 @@ class NumberOfSolutionsSerializers(serializers.ModelSerializer):
             'constructionYear', 
             'suitableFor',
             'place',
-            'radius'
+            # 'radius'
             )
 
 
 class ListOfSolutionsSerializers(serializers.ModelSerializer):
-    radius = serializers.CharField(allow_blank=True)
+    # radius = serializers.CharField(allow_blank=True)
     id = serializers.CharField()
     place = PlaceSerializers()
     # image = ImageSerialisers(read_only=True)
@@ -77,7 +77,7 @@ class ListOfSolutionsSerializers(serializers.ModelSerializer):
             'constructionYear', 
             'suitableFor',
             'place',
-            'radius'
+            # 'radius'
             )
 
 

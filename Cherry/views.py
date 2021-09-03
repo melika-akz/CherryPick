@@ -22,11 +22,11 @@ def score_building(result_query, count):
 def list_of_query(result_query):
     list_data = []
     count = 0
-
+    print(result_query)
     for results in result_query:
         for img in results['image']:
             urls = img['url']
-        
+        print(results)
         data = {   
             'id': results['id'],
             'transportation': results['transportation'],
@@ -44,7 +44,7 @@ def list_of_query(result_query):
                         'lon': results['place']['geolocation']['lon']        
                          }
                     },
-            'image': {'url': urls,},
+            # 'image': {'url': urls,},
             'price': results['price'], 
             'environment': results['environment'], 
             'rooms': results['rooms'], 

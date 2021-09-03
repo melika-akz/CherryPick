@@ -1,12 +1,11 @@
 from django.db import models
-from django.contrib.gis.db import models
+from django.contrib.gis.db.models import PointField
+from elasticsearch_dsl import Date, Integer, Keyword, Text, connections, GeoShape, GeoPoint
 
- 
 class Geolocation(models.Model):
     id = models.IntegerField(primary_key=True, default=False, null=False)
-    location = models.PointField()
-    lat = models.CharField(max_length=50, blank=True, default=None, null=True)
-    lon = models.CharField(max_length=50, default=None, blank=True, null=True)
+    lat = models.DecimalField(null=True, blank=True, decimal_places=15, max_digits=19, default=0)
+    lon = models.DecimalField(null=True, blank=True, decimal_places=15, max_digits=19, default=0)
 
 
 class Address(models.Model):
@@ -17,12 +16,12 @@ class Address(models.Model):
     city = models.CharField(max_length=50, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True)
     
-
 class Place(models.Model):
     id = models.IntegerField(primary_key=True, default=False, null=False)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True)
     geolocation = models.ForeignKey(Geolocation, on_delete=models.CASCADE, blank=True, null=True)
-    
+    location = models.CharField(max_length=50, blank=True, null=True)
+
 
 class ImageHome(models.Model):
     id = models.IntegerField(primary_key=True, default=False, null=False)

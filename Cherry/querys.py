@@ -1,4 +1,5 @@
 from elasticsearch_dsl.query import Q , MatchAll
+from elasticsearch import Elasticsearch
 from .documents import HomeDocument
 from .geolocation_alg import calcute_distance
 
@@ -51,7 +52,7 @@ def make_should_list_query(should_list, must_list):
 
 def query_builder(must_list, should_list):
     search = HomeDocument.search()
-
+    
     # make must list query
     mustList = make_must_list_query(must_list)
 
@@ -59,12 +60,13 @@ def query_builder(must_list, should_list):
     shouldList = make_should_list_query(should_list, must_list)
 
     if len(must_list) == 0:
-        q = Q('bool', must=MatchAll(), should=shouldList)
+        q = Q('bool', must=MatchAll(), should=shouldList, filter=Q('geo_distance', distance="3000km", place__geolocation={'lat':"4.88015951",'lon':"51.577141"}))
 
     else:
         q = Q('bool', must=mustList, should=shouldList)
     
     search = search.query(q)
+    
     return search
 
 

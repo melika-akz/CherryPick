@@ -1,9 +1,10 @@
+import elasticsearch
 from CherryPick.settings import MEDIA_ROOT
 from Cherry.models import Address, Geolocation, Home, ImageHome, Place
 import xlrd
 import os
 from random import randint
-
+from elasticsearch_dsl import Document, Date, Integer, Keyword, Text, Object
 
 # convert price to int
 def make_price(price):
@@ -20,7 +21,7 @@ def create_Home(description,price,transportation,kindOfHouse,constructionYear,
                  houseNumber, street, zipCode, city,url, lon, lat):
     
     x = randint(1111,99999)
-
+ 
     # add address to db
     address, create = Address.objects.update_or_create(id=x,defaults={
                 'street': street,
