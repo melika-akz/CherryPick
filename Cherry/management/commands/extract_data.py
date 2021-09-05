@@ -72,6 +72,10 @@ def create_Home(description,price,transportation,kindOfHouse,constructionYear,
     instanc.image.add(image1[0])
 
 
+def create_data_to_elasticSearch():
+    pass
+
+
 def extract_data_excel():
     media_loc=MEDIA_ROOT+'docs'
     for doc in os.listdir(media_loc):

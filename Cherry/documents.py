@@ -85,7 +85,7 @@ class HomeDocument(Document):
                         'city':  fields.TextField(),
                         'country':  fields.TextField()}),
                     
-                    'geolocation': fields.GeoPoint(fields={'lan':fields.TextField(),'lon':fields.TextField()})
+                    'geolocation': fields.GeoPointField()
     })
     image = fields.ObjectField(properties={
         'url': fields.TextField(),
