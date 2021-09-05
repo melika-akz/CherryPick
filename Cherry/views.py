@@ -1,3 +1,4 @@
+from Cherry.documents import client_elasticsearch
 from rest_framework.generics import CreateAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from .serializers import (
@@ -5,9 +6,8 @@ from .serializers import (
                         ListOfSolutionsSerializers, 
                         DetailedSolutionSerializers,
                         )
-from .documents import *
-from .serializers import HomeDocument
 from .querys import filter_data
+
 
 
 def score_building(result_query, count):
@@ -22,42 +22,10 @@ def score_building(result_query, count):
 def list_of_query(result_query):
     list_data = []
     count = 0
-
-    for results in result_query:
-        for img in results['image']:
-            urls = img['url']
-        
-        data = {   
-            'id': results['id'],
-            'transportation': results['transportation'],
-            'place': {
-                    'address': {
-                    'street': results['place']['address']['street'],
-                    'houseNumber':results['place']['address']['houseNumber'],
-                    'zipcode':results['place']['address']['zipcode'],
-                    'city': results['place']['address']['city'],
-                    'country': results['place']['address']['country'],
-                    },
-
-                    'geolocation':{
-                        'lat': results['place']['geolocation']['lat'],
-                        'lon': results['place']['geolocation']['lon']        
-                         }
-                    },
-            'image': {'url': urls,},
-            'price': results['price'], 
-            'environment': results['environment'], 
-            'rooms': results['rooms'], 
-            'livingArea': results['livingArea'],
-            'plotArea': results['plotArea'],
-            'kindOfHouse': results['kindOfHouse'],
-            'energyLabel': results['energyLabel'],
-            'constructionYear': results['constructionYear'],
-            'suitableFor': results['suitableFor'],
-            'callType': 'ListOfSolution',
-            'score': score_building(result_query, count)
-                }
-
+    for results in result_query:  
+        data = results.to_dict()
+        data['score'] = score_building(result_query, count)
+        data['callType'] = 'ListOfSolution'
         list_data.append(data)
         count+=1
         
@@ -81,20 +49,20 @@ class NumberofSolutionsApiView(CreateAPIView):
 
 class listofSolutionsApiView(ListCreateAPIView):
     serializer_class = ListOfSolutionsSerializers
-   
+
     def post(self, request, *args, **kwargs):
         serializers = ListOfSolutionsSerializers(data=request.data , context= {'result':request.data}, many = True)
         find_filter = serializers.context.get('result')
         result = filter_data(find_filter, serializers)
         result = list_of_query(result)
-        
+
         if serializers.is_valid():
             return Response(result)
 
         return Response()
 
     def get_queryset(self):
-        query =  HomeDocument.search()
+        query = client_elasticsearch()
         return query
     
 
