@@ -1,4 +1,4 @@
-from Cherry.documents import HomeDocument
+from Cherry.documents import client_elasticsearch
 from rest_framework.generics import CreateAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from .serializers import (
@@ -7,6 +7,7 @@ from .serializers import (
                         DetailedSolutionSerializers,
                         )
 from .querys import filter_data
+
 
 
 def score_building(result_query, count):
@@ -61,7 +62,7 @@ class listofSolutionsApiView(ListCreateAPIView):
         return Response()
 
     def get_queryset(self):
-        query = HomeDocument.search()
+        query = client_elasticsearch()
         return query
     
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .documents import HomeDocument
+from .documents import client_elasticsearch
 
 
 class ImageSerialisers(serializers.Serializer):
@@ -55,7 +55,7 @@ class ListOfSolutionsSerializers(serializers.Serializer):
     constructionYear = serializers.CharField(allow_blank=True)
     suitableFor = serializers.CharField(allow_blank=True)
     place = PlaceSerializers()
-    # radius = serializers.CharField(allow_blank=True)
+    radius = serializers.CharField(allow_blank=True)
     image = ImageSerialisers(read_only=True)
     callType = serializers.CharField(allow_blank=True, read_only=True)
     score = serializers.CharField(allow_blank=True, read_only=True)
@@ -77,44 +77,14 @@ class DetailedSolutionSerializers(serializers.Serializer):
     constructionYear = serializers.CharField(allow_blank=True)
     suitableFor = serializers.CharField(allow_blank=True)
     place = PlaceSerializers()
-    # radius = serializers.CharField(allow_blank=True)
     image = ImageSerialisers(read_only=True)
     
     
     def create(self, validated_data):
-        results = HomeDocument.search().filter("match", id=validated_data['id'])
-        url_list = []
+        results = client_elasticsearch().filter("match", id=validated_data['id'])
+    
         for result in results:
-            # return result.to_dict()
-            return  { 
-                'id': result['id'],
-                'description': result['description'],
-                'transportation': result['transportation'], 
-                   'place': {
-                        'address':{
-                        'street': result['place']['address']['street'],
-                        'houseNumber': result['place']['address']['houseNumber'],
-                        'zipcode': result['place']['address']['zipcode'],
-                        'city': result['place']['address']['city'],
-                        'country': result['place']['address']['country']},
-                        'geolocation': {
-                            'lat': result['place']['geolocation']['lat'],
-                            'lon': result['place']['geolocation']['lon']
-                            },
-                        },
-                'image': result['image'], 
-                'price': result['price'], 
-                'environment': result['environment'], 
-                'rooms': result['rooms'], 
-                'rank': result['rank'],
-                'livingArea': result['livingArea'],
-                'plotArea': result['plotArea'],
-                'kindOfHouse': result['kindOfHouse'],
-                'energyLabel': result['energyLabel'],
-                'constructionYear': result['constructionYear'],
-                'suitableFor': result['suitableFor'],
-                'callType': 'detailedSolution',
-                }
+            return result.to_dict()
 
         return validated_data
                     

@@ -1,11 +1,5 @@
-from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Q , MatchAll
-from elasticsearch import Elasticsearch
-from .documents import HomeDocument
-
-
-es = Elasticsearch(host="localhost", port=9200)
-es = Elasticsearch("http://elastic:changeme@localhost:9200")
+from .documents import client_elasticsearch
 
 
 def make_must_list_query(must_list):
@@ -43,8 +37,7 @@ def make_should_list_query(should_list):
 
 
 def query_builder(must_list, should_list):
-    # search = Search(index='realstate')
-    search = HomeDocument.search()
+    search = client_elasticsearch()
     # make must list query
     mustList = make_must_list_query(must_list)
 
@@ -80,7 +73,6 @@ def separator_data(query_list):
 
 # filter multy data
 def filter_data(find_filter, serializers): 
-    # search = Search(index='realstate')
     query_list = []
     for obj in find_filter:
         if find_filter[obj] != "":
