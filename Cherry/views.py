@@ -1,3 +1,5 @@
+from elasticsearch_dsl import index
+from rest_framework import response
 from Cherry.documents import client_elasticsearch
 from rest_framework.generics import CreateAPIView, ListCreateAPIView
 from rest_framework.response import Response
@@ -28,7 +30,7 @@ def list_of_query(result_query):
         data['callType'] = 'ListOfSolution'
         list_data.append(data)
         count+=1
-        
+    
     return list_data
 
 
@@ -39,10 +41,12 @@ class NumberofSolutionsApiView(CreateAPIView):
         serializers = NumberOfSolutionsSerializers(data=request.data , context= {'result':request.data}, many = True)
         find_filter = serializers.context.get('result')
         result = filter_data(find_filter, serializers)
+        # result = list_of_query(result)
+        response = result.execute()
+        response.hits.total.value
 
-        
         if serializers.is_valid():
-            return Response({'result' : result.count()})
+            return Response({'result' :  result.count()})
 
         return Response()
 

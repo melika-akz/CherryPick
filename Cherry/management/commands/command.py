@@ -1,5 +1,5 @@
 from django.core.management import BaseCommand
-from .extract_data import extract_data_excel
+from .extract_data import extract_excel
 import traceback
 
 
@@ -10,7 +10,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             if options['update']:
-               extract_data_excel()
+               extract_excel()
 
         except Exception as e:
             traceback.print_exc()

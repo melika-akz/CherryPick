@@ -1,10 +1,10 @@
+from elasticsearch_dsl import index
 from elasticsearch_dsl.query import Q , MatchAll
 from .documents import client_elasticsearch
 
 
 def make_must_list_query(must_list):
     mustList = []
-    print(must_list)
     for must in must_list:
         
         if must[0] == 'rooms' or must[0] == 'livingArea' or must[0] == 'plotArea' or must[0] == 'constructionYear' :
@@ -52,8 +52,8 @@ def query_builder(must_list, should_list):
         q = Q('bool', must=mustList, should=shouldList)
     
     search = search.query(q)
-    
-    return search
+
+    return search.extra(track_total_hits=True)
 
 
 # separator data(list) to must list, should list, could list
@@ -77,9 +77,9 @@ def filter_data(find_filter, serializers):
     for obj in find_filter:
         if find_filter[obj] != "":
             value = str(serializers.context.get('result')[str(obj)])
-                
+            
             if value.find(':'):
                 query_list.append([obj, value[0], value[2:]])
-                    
+
     search = separator_data(query_list)
     return search

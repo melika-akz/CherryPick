@@ -1,91 +1,156 @@
+from Cherry.models import Geolocation, Place
+from elasticsearch import Elasticsearch
 from CherryPick.settings import MEDIA_ROOT
-from Cherry.models import Address, Geolocation, Home, ImageHome, Place
 import xlrd
 import os
 from random import randint
 
+mappings= {
+  "mappings":{
+      "properties":{
+        "constructionYear": {
+          "type": "text"
+        },
+        "description": {
+          "type": "text"
+        },
+        "energyLabel": {
+          "type": "text"
+        },
+        "environment": {
+          "type": "text"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "image": {
+          "properties": {
+            "url": {
+              "type": "text"
+            }
+          }
+        },
+        "kindOfHouse": {
+          "type": "text"
+        },
+        "livingArea": {
+          "type": "text"
+        },
+        "place": {
+          "properties": {
+            "address": {
+              "properties": {
+                "city": {
+                  "type": "text"
+                },
+                "country": {
+                  "type": "text"
+                },
+                "houseNumber": {
+                  "type": "text"
+                },
+                "street": {
+                  "type": "text"
+                },
+                "zipcode": {
+                  "type": "text"
+                }
+              }
+            },
+            "geolocation": {
+              "type": "geo_point",
+               
+            }
+            
+          }
+        },
+        "plotArea": {
+          "type": "text"
+        },
+        "price": {
+          "type": "text"
+        },
+        "rank": {
+          "type": "text"
+        },
+        "rooms": {
+          "type": "text"
+        },
+        "suitableFor": {
+          "type": "text"
+        },
+        "transportation": {
+          "type": "text"
+        }
+      }
+  }}
+es = Elasticsearch(host="localhost", port=9200)
+es = Elasticsearch("http://elastic:changeme@localhost:9200")
 
-# convert price to int
-def make_price(price):
-    price = str(price).split(".")
-    price_convert = ""
-    for p in price:
-        price_convert = price_convert + p
-
-    return int(price_convert)
+# es.indices.create(index='realstate', body=mappings)
 
 
-def create_Home(description,price,transportation,kindOfHouse,constructionYear,
-                livingArea,plotArea,rooms,energyLabel, suitableFor, 
-                 houseNumber, street, zipCode, city,url, lon, lat):
+
+
+
+def insert_data(id,description, price, transportation, kindOfHouse, constructionYear,
+                livingArea, plotArea, rooms, energyLabel, suitableFor, 
+                 houseNumber, street, zipCode, city, url, lon, lat):
+    data = {
+        "id": id,
+        "constructionYear": constructionYear,
+        "description": description,
+        "energyLabel": energyLabel,
+        "environment": "",
+        
+        "image": {
+            "url":[url] 
+        },
+        "kindOfHouse": kindOfHouse,
+        "livingArea": livingArea,
+        "place": {
+            "address": {
+                "city": city,
+                "country": "Netherlands",
+                "houseNumber": houseNumber,
+                "street": street,
+                "zipcode": zipCode 
+            },
+            "geolocation": {
+              "lat":lat,
+              "lon":lon               
+          }
+        },
+        "plotArea": plotArea,
+        "price": price,
+        "rank": "",
+        "rooms": rooms,
+        "suitableFor": suitableFor,
+        "transportation": transportation
+  }
     
-    x = randint(1111,99999)
 
-    # add address to db
-    address, create = Address.objects.update_or_create(id=x,defaults={
-                'street': street,
-                'houseNumber': houseNumber,
-                'zipcode': zipCode,
-                'city': city,
-                'country': 'Netherlands'})
+    res = es.index(index='realstate',body=data, )
+    print(res)
 
-    # add geolocation to db
-    geolocation, create = Geolocation.objects.update_or_create(id=x,defaults={
-                        'lat': lat,
-                        'lon':lon,
-                    })
-                    
-    address = Address.objects.filter(id=x)
-    geolocation = Geolocation.objects.filter(id=x)
-
-    # add place to db
-    place, create = Place.objects.update_or_create(id=x ,defaults={
-        'address':address[0],
-        'geolocation':geolocation[0],
-        })
-
-    # add image to db
-    image, create = ImageHome.objects.update_or_create(id =x ,defaults={
-         'url': url,
-    })
-
-    place = Place.objects.filter(id=x)
-    image1 = ImageHome.objects.filter(id=x)
-
-    # add home to db
-    instanc, create = Home.objects.update_or_create(id =x ,defaults={
-        'description': description,
-        'transportation': transportation,
-        'place': place[0],
-        'price':make_price(price),
-        'environment':' ',
-        'rooms':rooms,
-        'rank':0,
-        'livingArea':livingArea,
-        'plotArea':plotArea,
-        'kindOfHouse':kindOfHouse,
-        'energyLabel':energyLabel,
-        'constructionYear':constructionYear,
-        'suitableFor':suitableFor,
-         })
-    instanc.image.add(image1[0])
-
-
-def extract_data_excel():
+    
+def extract_excel():
     media_loc=MEDIA_ROOT+'docs'
     for doc in os.listdir(media_loc):
         file = MEDIA_ROOT+'docs/'+doc
         wb = xlrd.open_workbook(file)
         sh = wb.sheet_by_index(0)
+        count = 0
         for rx in range(sh.nrows):
+            id = count
             data = sh.row(rx)
             home_data = data
-            create_Home(
+            print(home_data)
+            insert_data(id,
                     home_data[0].value, home_data[1].value, home_data[2].value,
                     home_data[3].value, home_data[4].value, home_data[5].value,
                     home_data[6].value, home_data[7].value, home_data[8].value,
                     home_data[9].value, home_data[10].value, home_data[11].value,
                     home_data[12].value, home_data[13].value, home_data[14].value,
                     home_data[15].value, home_data[16].value)
-
-
+            count+=1
