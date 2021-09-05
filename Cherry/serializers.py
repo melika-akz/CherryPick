@@ -1,124 +1,91 @@
-
 from rest_framework import serializers
-from .models import Address, Geolocation, Home, ImageHome, Place
 from .documents import HomeDocument
 
 
-class ImageSerialisers(serializers.ModelSerializer):
-    class Meta:
-        model = ImageHome
-        fields = ('url',)
+class ImageSerialisers(serializers.Serializer):
+    url = serializers.CharField(allow_blank=True)
 
 
-class GeolocationSerialisers(serializers.ModelSerializer):
-    class Meta:
-        model = Geolocation
-        fields = ('lat', 'lon')
+class GeolocationSerialisers(serializers.Serializer):
+    lat = serializers.CharField(allow_blank=True)
+    lon = serializers.CharField(allow_blank=True)
+    
 
+class AddressSerialisers(serializers.Serializer):
+    street= serializers.CharField(allow_blank=True)
+    houseNumber = serializers.CharField(allow_blank=True)
+    zipcode = serializers.CharField(allow_blank=True)
+    city = serializers.CharField(allow_blank=True)
+    country = serializers.CharField(allow_blank=True)
 
-class AddressSerialisers(serializers.ModelSerializer):
-    class Meta:
-        model = Address
-        fields = ('street', 'houseNumber', 'zipcode', 'city', 'country')
-
-
-class PlaceSerializers(serializers.ModelSerializer):
+    
+class PlaceSerializers(serializers.Serializer):
     geolocation = GeolocationSerialisers()
     address = AddressSerialisers()
-    class Meta:
-        model = Place
-        fields = ('address', 'geolocation')
 
 
-class NumberOfSolutionsSerializers(serializers.ModelSerializer):
-    # radius = serializers.CharField(allow_blank=True)
-    id = serializers.CharField()
+class NumberOfSolutionsSerializers(serializers.Serializer):
+    id = serializers.CharField(allow_blank=True)
+    price = serializers.CharField(allow_blank=True)
+    environment = serializers.CharField(allow_blank=True)
+    rooms = serializers.CharField(allow_blank=True)
+    rank = serializers.CharField(allow_blank=True)
+    livingArea = serializers.CharField(allow_blank=True)
+    plotArea = serializers.CharField(allow_blank=True)
+    kindOfHouse = serializers.CharField(allow_blank=True)
+    energyLabel = serializers.CharField(allow_blank=True)
+    constructionYear = serializers.CharField(allow_blank=True)
+    suitableFor = serializers.CharField(allow_blank=True)
     place = PlaceSerializers()
-    
-    class Meta:
-        model = Home
-        fields = ( 
-            # 'callType', 
-            'id',
-            'price', 
-            'environment', 
-            'rooms', 
-            'rank',
-            'livingArea', 
-            'plotArea', 
-            'kindOfHouse', 
-            'energyLabel', 
-            'constructionYear', 
-            'suitableFor',
-            'place',
-            # 'radius'
-            )
+    radius = serializers.CharField(allow_blank=True)
+   
 
-
-class ListOfSolutionsSerializers(serializers.ModelSerializer):
-    # radius = serializers.CharField(allow_blank=True)
-    id = serializers.CharField()
+class ListOfSolutionsSerializers(serializers.Serializer):
+    id = serializers.CharField(allow_blank=True)
+    description = serializers.CharField(allow_blank=True, read_only=True)
+    transportation = serializers.CharField(allow_blank=True, read_only=True)
+    price = serializers.CharField(allow_blank=True)
+    environment = serializers.CharField(allow_blank=True)
+    rooms = serializers.CharField(allow_blank=True)
+    rank = serializers.CharField(allow_blank=True)
+    livingArea = serializers.CharField(allow_blank=True)
+    plotArea = serializers.CharField(allow_blank=True)
+    kindOfHouse = serializers.CharField(allow_blank=True)
+    energyLabel = serializers.CharField(allow_blank=True)
+    constructionYear = serializers.CharField(allow_blank=True)
+    suitableFor = serializers.CharField(allow_blank=True)
     place = PlaceSerializers()
-    # image = ImageSerialisers(read_only=True)
-
-    class Meta:
-        model = Home
-        fields = (  
-            # 'callType', 
-            'id',
-            'price', 
-            'environment', 
-            'rooms', 
-            'rank',
-            'livingArea', 
-            'plotArea', 
-            'kindOfHouse', 
-            'energyLabel', 
-            'constructionYear', 
-            'suitableFor',
-            'place',
-            # 'radius'
-            )
+    # radius = serializers.CharField(allow_blank=True)
+    image = ImageSerialisers(read_only=True)
+    callType = serializers.CharField(allow_blank=True, read_only=True)
+    score = serializers.CharField(allow_blank=True, read_only=True)
 
 
 # post id and get detail of home
-class DetailedSolutionSerializers(serializers.ModelSerializer):
-    # callType = serializers.CharField(allow_blank=True)
+class DetailedSolutionSerializers(serializers.Serializer):
     id = serializers.CharField()
-    image = ImageSerialisers(read_only=True)
     description = serializers.CharField(allow_blank=True, read_only=True)
     transportation = serializers.CharField(allow_blank=True, read_only=True)
-    place = PlaceSerializers(read_only=True)
-    rank =  serializers.IntegerField(read_only=True)
-
-    class Meta:
-        model = Home
-        fields = [
-            'id',
-            'description',
-            'transportation',
-            'place',
-            'price', 
-            'environment', 
-            'rooms', 
-            'rank',
-            'livingArea', 
-            'plotArea', 
-            'kindOfHouse', 
-            'energyLabel', 
-            'constructionYear', 
-            'suitableFor', 
-            'image'
-        ]            
-        depth = 2
-
+    price = serializers.CharField(allow_blank=True)
+    environment = serializers.CharField(allow_blank=True)
+    rooms = serializers.CharField(allow_blank=True)
+    rank = serializers.CharField(allow_blank=True)
+    livingArea = serializers.CharField(allow_blank=True)
+    plotArea = serializers.CharField(allow_blank=True)
+    kindOfHouse = serializers.CharField(allow_blank=True)
+    energyLabel = serializers.CharField(allow_blank=True)
+    constructionYear = serializers.CharField(allow_blank=True)
+    suitableFor = serializers.CharField(allow_blank=True)
+    place = PlaceSerializers()
+    # radius = serializers.CharField(allow_blank=True)
+    image = ImageSerialisers(read_only=True)
+    
+    
     def create(self, validated_data):
         results = HomeDocument.search().filter("match", id=validated_data['id'])
         url_list = []
         for result in results:
-            for img in result['image']:
-                urls = img['url']
-                url_list.append(urls)
+            # return result.to_dict()
             return  { 
                 'id': result['id'],
                 'description': result['description'],
@@ -135,7 +102,7 @@ class DetailedSolutionSerializers(serializers.ModelSerializer):
                             'lon': result['place']['geolocation']['lon']
                             },
                         },
-                'image': {'url': url_list}, 
+                'image': result['image'], 
                 'price': result['price'], 
                 'environment': result['environment'], 
                 'rooms': result['rooms'], 

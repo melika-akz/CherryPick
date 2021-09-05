@@ -1,10 +1,9 @@
 from typing import Dict
+from elasticsearch import Elasticsearch
 from django_elasticsearch_dsl import Document, fields, GeoPoint
 from django_elasticsearch_dsl.registries import registry
 from .models import Address, Geolocation, Home, ImageHome, Place
-# from elasticsearch_dsl import Date, Integer, Keyword, Text, connections, GeoShape, Nested, InnerDoc,GeoPoint
 from datetime import datetime
-
 
 
 @registry.register_document
@@ -61,17 +60,10 @@ class PlaceDocument(Document):
         model = Place
         fields = ['id']
 
-# class GeolocationX(InnerDoc):
-#     lon = fields.FloatField()
-#     lat = fields.FloatField()
-
-#     def age(self):
-#         return datetime.now()
-
 @registry.register_document
 class HomeDocument(Document):
     class Index:
-        name = 'cherry'   
+        name = 'realstate'   
         settings = {
         'number_of_shards': 1,
         'number_of_replicas': 0
@@ -110,6 +102,7 @@ class HomeDocument(Document):
                    ]
         related_models = [Place, ImageHome, Geolocation]
     
+
     def get_instances_from_related(self, related_instance):
             if isinstance(related_instance, ImageDocument):
                 return related_instance.url , related_instance.pk
@@ -117,30 +110,4 @@ class HomeDocument(Document):
                 return related_instance.lat , related_instance.lon , related_instance.pk
             elif isinstance(related_instance, AddressDocument):
                 return related_instance.street, related_instance.houseNumber, related_instance.zipcode, related_instance.city, related_instance.country, related_instance.pk
-    
-
-    def prepare_geolocation(self, instance: Geolocation)->Dict:
-        return {
-            'lat': instance.geolocation.x,
-            'lon': instance.geolocation.y
-        }
-
-
-# GET /cherry/_search
-{
-  "query": {
-    "bool": {
-      "must": {
-        "match_all": {}
-      },
-    "filter": {
-    "geo_distance": {
-      "distance": "3000km",
-      "place.geolocation": {
-        "lat": "4.8801595",
-        "lon": "51.577141"
-      }
-    }
-  }
-}
-}}
+ 

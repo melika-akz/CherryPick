@@ -87,7 +87,7 @@ mappings= {
 es = Elasticsearch(host="localhost", port=9200)
 es = Elasticsearch("http://elastic:changeme@localhost:9200")
 
-es.indices.create(index='realstate', body=mappings)
+# es.indices.create(index='realstate', body=mappings)
 
 
 
@@ -103,24 +103,23 @@ def insert_data(id,description, price, transportation, kindOfHouse, construction
         "energyLabel": energyLabel,
         "environment": "",
         
-        "image": { "properties": {
+        "image": {
             "url":[url] 
-        }},
+        },
         "kindOfHouse": kindOfHouse,
         "livingArea": livingArea,
-        "place": { "properties": {
+        "place": {
             "address": {
-                 "properties": {
                 "city": city,
                 "country": "Netherlands",
                 "houseNumber": houseNumber,
                 "street": street,
                 "zipcode": zipCode 
-            }},
+            },
             "geolocation": {
               "lat":lat,
               "lon":lon               
-          }}
+          }
         },
         "plotArea": plotArea,
         "price": price,
