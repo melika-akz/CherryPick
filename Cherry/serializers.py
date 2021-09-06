@@ -81,7 +81,7 @@ class DetailedSolutionSerializers(serializers.Serializer):
     
     
     def create(self, validated_data):
-        results = client_elasticsearch().filter("match", id=validated_data['id'])
+        results = client_elasticsearch('realstate').filter("match", id=validated_data['id'])
     
         for result in results:
             return result.to_dict()

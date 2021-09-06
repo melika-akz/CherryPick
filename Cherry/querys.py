@@ -37,7 +37,7 @@ def make_should_list_query(should_list):
 
 
 def query_builder(must_list, should_list):
-    search = client_elasticsearch()
+    search = client_elasticsearch('realstate')
     # make must list query
     mustList = make_must_list_query(must_list)
 

@@ -66,7 +66,7 @@ class listofSolutionsApiView(ListCreateAPIView):
         return Response()
 
     def get_queryset(self):
-        query = client_elasticsearch()
+        query = client_elasticsearch('realstate')
         return query
     
 
