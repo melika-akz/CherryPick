@@ -1,10 +1,10 @@
-from Cherry.models import Geolocation, Place
 from elasticsearch import Elasticsearch
 from CherryPick.settings import MEDIA_ROOT
 import xlrd
 import os
 from random import randint
 
+# this mappping for Real State index
 mappings= {
   "mappings":{
       "properties":{
@@ -84,13 +84,13 @@ mappings= {
         }
       }
   }}
+
+
 es = Elasticsearch(host="localhost", port=9200)
 es = Elasticsearch("http://elastic:changeme@localhost:9200")
 
-# es.indices.create(index='realstate', body=mappings)
 
-
-
+es.indices.create(index='realstate', body=mappings)
 
 
 def insert_data(id,description, price, transportation, kindOfHouse, constructionYear,
@@ -140,12 +140,11 @@ def extract_excel():
         file = MEDIA_ROOT+'docs/'+doc
         wb = xlrd.open_workbook(file)
         sh = wb.sheet_by_index(0)
-        count = 0
+        count = 1
         for rx in range(sh.nrows):
             id = count
             data = sh.row(rx)
             home_data = data
-            print(home_data)
             insert_data(id,
                     home_data[0].value, home_data[1].value, home_data[2].value,
                     home_data[3].value, home_data[4].value, home_data[5].value,
