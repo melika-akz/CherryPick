@@ -194,7 +194,7 @@ es = Elasticsearch(host="localhost", port=9200)
 es = Elasticsearch("http://elastic:changeme@localhost:9200")
 
 
-# es.indices.create(index='realstate', body=mappings)
+es.indices.create(index='realstate', body=mappings)
 def creat_realState():
     data={
     "id": {
