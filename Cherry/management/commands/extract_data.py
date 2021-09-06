@@ -90,7 +90,7 @@ es = Elasticsearch(host="localhost", port=9200)
 es = Elasticsearch("http://elastic:changeme@localhost:9200")
 
 
-es.indices.create(index='realstate', body=mappings)
+# es.indices.create(index='cherry', body=mappings)
 
 
 def insert_data(id,description, price, transportation, kindOfHouse, constructionYear,
@@ -127,11 +127,11 @@ def insert_data(id,description, price, transportation, kindOfHouse, construction
         "rooms": rooms,
         "suitableFor": suitableFor,
         "transportation": transportation
-  }
+      }
     
 
     res = es.index(index='realstate',body=data, )
-    print(res)
+    print('data'+str(id)+'complete.')
 
     
 def extract_excel():
