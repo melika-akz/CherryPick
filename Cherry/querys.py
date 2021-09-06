@@ -2,42 +2,94 @@ from elasticsearch_dsl import index
 from elasticsearch_dsl.query import Q , MatchAll
 from .documents import client_elasticsearch
 
+# connect to index realstate and send hits
+def query_realstate():
+    search = client_elasticsearch('realstate')
+    search = search.query(Q('bool', must=MatchAll()))
+    data = search.execute().hits[0]
 
+    return data
+
+
+# check . in str value and separator
+def check_point(query):
+    # if str obj like place.address.city split 
+    if str(query).find('.'):
+        query = str(query).split('.')[0]
+
+    return query
+
+
+# make list of must query
 def make_must_list_query(must_list):
+    query_type = query_realstate()
     mustList = []
+
     for must in must_list:
-        
-        if must[0] == 'rooms' or must[0] == 'livingArea' or must[0] == 'plotArea' or must[0] == 'constructionYear' :
+        mst = check_point(must[0])
+
+        if query_type[mst]['datatype'] == 'date' :
             mustList.append(Q("range", **{must[0]:{'gte': must[1]}}))
 
-        elif must[0] == 'price':
+        elif query_type[mst]['datatype'] == 'numeric':
+             mustList.append(Q("range", **{must[0]:{'gte': must[1]}}))
+
+        elif query_type[mst]['datatype'] == 'monetary':
             mustList.append(Q("range", price={'lte': must[1]}))
 
-        
+        elif query_type[mst]['datatype'] == 'multivalue':
+            for value in query_type[must[0]]['value']:
+
+                if value == must[1]:
+                    mustList.append(Q('match', **{must[0]: must[1]}))
+
+        elif query_type[mst]['datatype'] == 'string':
+            mustList.append(Q('match', **{must[0]: must[1]}))
+
+        elif query_type[mst]['datatype'] == 'geospatial':
+           mustList.append(Q('match', **{must[0]: must[1]}))
+
         mustList.append(Q('match', **{must[0]: must[1]}))
 
     return mustList
 
 
+# make list of should query
 def make_should_list_query(should_list):
+    query_type = query_realstate()
     shouldList = []
+
     for should in should_list:
-        
-        
-        if should[0] == 'rooms' or should[0] == 'livingArea' or should[0] == 'plotArea' or should[0] == 'constructionYear' :
-            shouldList.append(Q("range", **{should[0]:{'gte': should[1]}}))
-           
-        elif should[0] == 'price':
-            shouldList.append(Q("range", price={'lte': should[1]}))
-        
-        else:
+        shd = check_point(should[0])
+
+        if query_type[shd]['datatype'] == 'date' :
+                shouldList.append(Q("range", **{should[0]:{'gte': should[1]}}))
+
+        elif query_type[shd]['datatype'] == 'numeric':
+                shouldList.append(Q("range", **{should[0]:{'gte': should[1]}}))
+
+        elif query_type[shd]['datatype'] == 'monetary' :
+                shouldList.append(Q("range", price={'lte': should[1]}))
+            
+        elif query_type[shd]['datatype'] == 'multivalue':
+            for value in query_type[should[0]]['value']:       
+                if value == should[1]:
+                    shouldList.append(Q('match', **{should[0]: should[1]}))
+
+        elif query_type[shd]['datatype'] == 'string':
             shouldList.append(Q('match', **{should[0]: should[1]}))
-           
+            
+        elif query_type[shd]['datatype'] == 'geospatial':
+            shouldList.append(Q('match', **{should[0]: should[1]}))
+            
+        shouldList.append(Q('match', **{should[0]: should[1]}))
+            
     return shouldList
 
 
 def query_builder(must_list, should_list):
     search = client_elasticsearch('cherry')
+    
     # make must list query
     mustList = make_must_list_query(must_list)
 
@@ -61,7 +113,6 @@ def separator_data(query_list):
     should_list, must_list = [],[]
 
     for query in query_list:
-        
         if query[1] == 'M':
             must_list.append([query[0],query[2]])
 
@@ -74,6 +125,7 @@ def separator_data(query_list):
 # filter multy data
 def filter_data(find_filter, serializers): 
     query_list = []
+
     for obj in find_filter:
         if find_filter[obj] != "":
             value = str(serializers.context.get('result')[str(obj)])
@@ -83,3 +135,6 @@ def filter_data(find_filter, serializers):
 
     search = separator_data(query_list)
     return search
+
+
+

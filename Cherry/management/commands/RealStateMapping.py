@@ -44,11 +44,10 @@ mappings= {
       "image": {
         "properties": {
           "datatype": {"type": "text"},
-          "subfeatures":{
-            "properties": {
+          "properties": {
               "url": {"type": "text"}
             }
-          }
+          
         }
       },
 
@@ -75,16 +74,13 @@ mappings= {
           "datatype": {"type": "text"}, 
           "qualities":{"type": "text"}, 
           "description":{"type": "text"},
-          "subfeatures":{
           "properties": {
               "address": {
                 "properties": {
                   "datatype": {"type": "text"}, 
                   "qualities":{"type": "text"}, 
                   "description":{"type": "text"},
-                  "subfeatures":{
-                    "properties": {
-                      "city": {
+                  "city": {
                         "properties": {
                           "datatype": {"type": "text"}, 
                           "qualities":{"type": "text"}, 
@@ -92,7 +88,7 @@ mappings= {
                         }
                         
                       },
-                      "country": {
+                  "country": {
                         "properties": {
                           "datatype": {"type": "text"}, 
                           "qualities":{"type": "text"}, 
@@ -129,8 +125,6 @@ mappings= {
                 "datatype": {"type": "text"}, 
                 "qualities":{"type": "text"},
                 "description":{"type": "text"},
-                "subfeatures":{
-                "properties": {
                   "lat": {
                     "properties": {
                       "datatype": {"type": "text"}, 
@@ -149,9 +143,7 @@ mappings= {
                 }
               }
             }
-          }
-        }
-      }
+    
     },
       "plotArea": {
         "properties": {
@@ -194,8 +186,7 @@ mappings= {
         }
       }
     }
-  }
-}
+
 
 
 
@@ -221,12 +212,10 @@ def creat_realState():
         "datatype": "string", 
         "qualities":["N/A"], 
         "description":"desc...",
-        "subfeatures":{
             "address": {
                 "datatype": "string", 
                 "qualities":["N/A"], 
                 "description":"desc...",
-                "subfeatures":{
                     "street":  {
                         "datatype": "string", 
                         "qualities":["N/A"], 
@@ -248,13 +237,12 @@ def creat_realState():
                         "datatype": "string", 
                         "qualities":["N/A"], 
                         "description":"desc..."}
-                }
             },
             "geolocation": {
                  "datatype": "geospatial", 
                  "qualities":["locality", "safety", "popularity", "accessibility"],
                  "description":"desc...",
-                 "subfeatures":{
+                 
                     "lat": {
                         "datatype": "geospatial", 
                         "qualities":["locality", "safety", "popularity", "accessibility"], 
@@ -264,15 +252,17 @@ def creat_realState():
                         "qualities":["locality", "safety", "popularity", "accessibility"], 
                         "description":"desc..."}
                 }
-            }
-       }
     },
     "image": {
-        "datatype": "string", "qualities":["N/A"], "description":"desc...",
-        "subfeatures":{
-            "url":  {"datatype": "string", "qualities":["N/A"], "description":"desc..."}
-        }
+        "datatype": "string", 
+        "qualities":["N/A"], 
+        "description":"desc...",
+        "url":  {
+          "datatype": "string", 
+          "qualities":["N/A"], 
+          "description":"desc..."}
     },
+
     "price":  {"datatype": "monetary", "qualities":["suitability"], "description":"desc..."},
     "environment": {"datatype": "multivalue", "values":["crowded","quite"], "qualities":["suitability", "popularity"], "description":"desc..."},
     "rooms":  {"datatype": "numeric", "values":"range(0,1000)", "qualities":["suitability"], "description":"desc..."},
