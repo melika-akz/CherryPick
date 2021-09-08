@@ -1,6 +1,6 @@
 from elasticsearch_dsl import index
 from rest_framework import response
-from Cherry.documents import client_elasticsearch
+from CherryPick.documents import client_elasticsearch
 from rest_framework.generics import CreateAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from .serializers import (
@@ -8,7 +8,7 @@ from .serializers import (
                         ListOfSolutionsSerializers, 
                         DetailedSolutionSerializers,
                         )
-from .querys import filter_data
+from CherryPick.querys import filter_data
 
 
 
@@ -66,7 +66,7 @@ class listofSolutionsApiView(ListCreateAPIView):
         return Response()
 
     def get_queryset(self):
-        query = client_elasticsearch('cherry')
+        query = client_elasticsearch('real_estate')
         return query
     
 

@@ -7,7 +7,7 @@ def client_elasticsearch(index_name):
     es = Elasticsearch("http://elastic:changeme@localhost:9200")
     search = es.search(index=index_name)
 
-    if index_name == 'cherry':#decision_model
+    if index_name == 'decision_model':#decision_model
         search = Search(index=index_name)
         return search
         

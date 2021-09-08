@@ -4,7 +4,7 @@ from .documents import client_elasticsearch
 
 # connect to index realstate and send hits
 def query_realstate():
-    search = client_elasticsearch('realstate')
+    search = client_elasticsearch('decision_model')
     search = search.query(Q('bool', must=MatchAll()))
     data = search.execute().hits[0]
 
@@ -88,7 +88,7 @@ def make_should_list_query(should_list):
 
 
 def query_builder(must_list, should_list):
-    search = client_elasticsearch('cherry')
+    search = client_elasticsearch('real_estate')
     
     # make must list query
     mustList = make_must_list_query(must_list)

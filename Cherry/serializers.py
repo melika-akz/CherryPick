@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .documents import client_elasticsearch
+from CherryPick.documents import client_elasticsearch
 
 
 class ImageSerialisers(serializers.Serializer):
@@ -81,7 +81,7 @@ class DetailedSolutionSerializers(serializers.Serializer):
     
     
     def create(self, validated_data):
-        results = client_elasticsearch('cherry').filter("match", id=validated_data['id'])
+        results = client_elasticsearch('chereal_estate').filter("match", id=validated_data['id'])
     
         for result in results:
             return result.to_dict()
