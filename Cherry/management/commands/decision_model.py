@@ -194,7 +194,7 @@ es = Elasticsearch(host="localhost", port=9200)
 es = Elasticsearch("http://elastic:changeme@localhost:9200")
 
 
-es.indices.create(index='realstate', body=mappings)
+# es.indices.create(index='decision_model', body=mappings)
 def creat_realState():
     data={
     "id": {
@@ -275,4 +275,4 @@ def creat_realState():
     "score": {"datatype": "percentage", "values":"range(0,100)", "qualities":["N/A"], "description":"desc..."}
     }
     
-    res = es.index(index='realstate',body=data)
+    res = es.index(index='decision_model',body=data)

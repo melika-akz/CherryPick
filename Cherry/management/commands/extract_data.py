@@ -90,7 +90,7 @@ es = Elasticsearch(host="localhost", port=9200)
 es = Elasticsearch("http://elastic:changeme@localhost:9200")
 
 
-es.indices.create(index='cherry', body=mappings)
+# es.indices.create(index='real_estate', body=mappings)
 
 
 def insert_data(id,description, price, transportation, kindOfHouse, constructionYear,
@@ -130,7 +130,7 @@ def insert_data(id,description, price, transportation, kindOfHouse, construction
       }
     
 
-    res = es.index(index='cherry',body=data, )
+    res = es.index(index='real_estate',body=data, )
     print('data'+str(id)+'complete.')
 
     

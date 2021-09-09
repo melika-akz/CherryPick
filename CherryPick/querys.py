@@ -38,7 +38,7 @@ def make_must_list_query(must_list):
             mustList.append(Q("range", price={'lte': must[1]}))
 
         elif query_type[mst]['datatype'] == 'multivalue':
-            for value in query_type[must[0]]['value']:
+            for value in query_type[must[0]]['values']:
 
                 if value == must[1]:
                     mustList.append(Q('match', **{must[0]: must[1]}))
@@ -72,7 +72,7 @@ def make_should_list_query(should_list):
                 shouldList.append(Q("range", price={'lte': should[1]}))
             
         elif query_type[shd]['datatype'] == 'multivalue':
-            for value in query_type[should[0]]['value']:       
+            for value in query_type[should[0]]['values']:       
                 if value == should[1]:
                     shouldList.append(Q('match', **{should[0]: should[1]}))
 
